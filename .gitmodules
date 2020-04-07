@@ -1,4 +1,6 @@
+[submodule "theme/beautifulhugo"]
+	path = theme/beautifulhugo
+	url = https://github.com/halogenica/beautifulhugo.git
 [submodule "public"]
 	path = public
 	url = https://github.com/shenguojun/shenguojun.github.io.git
-	branch = master
