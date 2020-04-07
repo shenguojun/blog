@@ -82,8 +82,11 @@ draft: true
 * 加入启动页的方式需要使用Android和iOS的本身的方式加入。
 ## 页面导航
 ### 导航到新的页面和返回
-*
+* route在安卓中相当于Activity，在iOS中相当于ViewController，在Flutter中，route表示的只是一个widget
+* 页面导航的步骤：创建两个route，使用Navigator.push()导航到第二个route，使用Navigator.pop()返回到上一个route
+* 通过创建MaterialPageRoute适配安卓和iOS页面跳转的动效，通过设置maintainState释放上一个页面的内存，通过fullscreenDialog设置是否全屏dialog样式
 ### 使用具名的路由进行导航
+* 
 ### 传递数据到新的页面
 ### 使用具名路由传递参数
 ### 从页面中返回数据
