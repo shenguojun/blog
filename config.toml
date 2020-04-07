@@ -5,17 +5,24 @@ publishdir    = "public"
 languageCode = "en-us"
 title = "Lawrence's Blog"
 theme = "beautifulhugo"
+pygmentsStyle = "trac"
+pygmentsUseClassic = true
 pygmentsCodeFences = true
 pygmentsUseClasses = true
 hasCJKLanguage = true
+googleAnalytics = "UA-162790364-1"
 
 [Params]
   subtitle = "臨淵羡魚，不如退而結網"
   logo = "lawrencesgj.jpg"
   favicon = "lawrencesgj.jpg"
   commit = false
+  readingTime = true
+  wordCount = true
+  socialShare = true
   rss = true
   comments = true
+  useHLJS = true
 
 [[menu.main]]
     name = "Blog"
