@@ -111,7 +111,8 @@ class BlankFragment : Fragment() {
 ![image.png](https://upload-images.jianshu.io/upload_images/2057980-1f03de987e6b5846.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 可以看出其中的databinding内容已经被移除。
 我们把这个通过v1编译出来的aar包放入主工程，并且修改‘com.android.tools.build:gradle’ 为3.2.1，然后clean build运行一下。**结果出乎我的意料成功了，并且没有任何上面遇到的问题。**我们来看databinding生成的类：
-![image.png](https://upload-images.jianshu.io/upload_images/2057980-626da142efff7896.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](https://upload-images.jianshu.io/upload_images/2057980-626da142efff7896.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240) 
+
 ```FragmentBlankBinding```应该是按照V1版本格式生成的，并且通过```V1CompatDataBinderMapperImpl```来兼容到V2的databinding中。
 
 ### databinding V1主工程引用V2 library
