@@ -11,9 +11,9 @@ tags: ["android"]
 
 # 参考
 初学者建议先不要看官方文档，可以先看这几篇博客：  
-* [Dagger 2 完全解析系列](http://johnnyshieh.me/posts/dagger-basic/) 
-* [Dagger2 最清晰的使用教程](https://www.jianshu.com/p/24af4c102f62) 
-* [Dagger 2 for Android Beginners系列](https://medium.com/@harivigneshjayapalan/dagger-2-for-android-beginners-introduction-be6580cb3edb)
+* [Dagger 2 完全解析系列](http://johnnyshieh.me/posts/dagger-basic/)  
+* [Dagger2 最清晰的使用教程](https://www.jianshu.com/p/24af4c102f62)  
+* [Dagger 2 for Android Beginners系列](https://medium.com/@harivigneshjayapalan/dagger-2-for-android-beginners-introduction-be6580cb3edb) 
 
 # 依赖注入
 在学习Dagger之前，我们先来了解一下依赖注入。
