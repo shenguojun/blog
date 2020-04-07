@@ -10,5 +10,6 @@ git pull
 
 # Come Back up to the Project Root
 cd ../..
+echo -e "\033[0;32mUpdating project...\033[0m"
 git pull
 ./deploy.sh
