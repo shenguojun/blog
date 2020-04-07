@@ -5,4 +5,4 @@ date: 2018-07-03T10:47:20+08:00
 ---
 
 ## 发一个小柴的照片，记录我的第一篇博客
-![chaiquan](/image/chiquan.jpg)
+![chaiquan](https://shenguojun.github.io/image/chiquan.jpg)
