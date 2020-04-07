@@ -1,5 +1,5 @@
 ---
-title: "Flutter学习笔记"
+title: "Flutter学习笔记（上）"
 date: 2020-04-07T15:19:10+08:00
 tags: ["flutter"]
 draft: true
@@ -82,26 +82,12 @@ draft: true
 * 加入启动页的方式需要使用Android和iOS的本身的方式加入。
 ## 页面导航
 ### 导航到新的页面和返回
+*
 ### 使用具名的路由进行导航
 ### 传递数据到新的页面
 ### 使用具名路由传递参数
 ### 从页面中返回数据
 ### 在两个页面中共享元素动画
-
-
-# Cookbook
-## 动画
-## 设计
-## 表格
-## 手势
-## 图片
-## 列表
-## 维护
-## 导航
-## 网络
-## 持久化
-## 插件
-## 测试
 
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
