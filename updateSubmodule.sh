@@ -10,4 +10,5 @@ git pull
 
 # Come Back up to the Project Root
 cd ../..
+git pull
 ./deploy.sh
