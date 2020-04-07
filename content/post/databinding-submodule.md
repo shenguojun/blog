@@ -113,10 +113,12 @@ class BlankFragment : Fragment() {
 我们把这个通过v1编译出来的aar包放入主工程，并且修改‘com.android.tools.build:gradle’ 为3.2.1，然后clean build运行一下。**结果出乎我的意料成功了，并且没有任何上面遇到的问题。**我们来看databinding生成的类：
 ![image.png](https://upload-images.jianshu.io/upload_images/2057980-626da142efff7896.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ```FragmentBlankBinding```应该是按照V1版本格式生成的，并且通过```V1CompatDataBinderMapperImpl```来兼容到V2的databinding中。
+
 ### databinding V1主工程引用V2 library
 我们使用‘com.android.tools.build:gradle’ 3.2.1版本先生成好library的aar文件，然后使用‘com.android.tools.build:gradle’ 3.1.4版本对主工程进行构建，这可以编译成功，但是运行失败了
 ![image.png](https://upload-images.jianshu.io/upload_images/2057980-79a95596bac0eb23.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 这证明V1是不能兼容到V2的，但是V2可以兼容V1。
+
 ## 如果V2可以兼容V1，为什么还会报错ClassCastException？
 回到我们最初的问题，实验证明databinding compile V2是可以兼容databinding compile V1生成的aar包的，但是为什么当我们把‘com.android.tools.build:gradle’升级到3.2.1会报错，但是降级回3.1.4就没问题了呢？暂时从理论上我也没办法解释，但是有个区别是值得我们注意的。那就是在报错的aar中，其中的layout文件并没有像我们实验中的所示去掉了databinding的信息，而是如下：![image.png](https://upload-images.jianshu.io/upload_images/2057980-8764908c7aead526.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 仍然包含有databinding的内容。所以这里猜测问题就是出在这个引用的aar包打包的时候用了比3.1.4更古老的com.android.tools.build:gradle（后附：最终找到了原来引用库的代码，发现build tools版本是2.2.3），然后databinding compile造成了连V2都没法兼容的问题。但是由于这个出问题的aar包我们并有他的源码，真是原因已经无从考究了。
