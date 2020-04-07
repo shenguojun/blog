@@ -14,8 +14,8 @@ googleAnalytics = "UA-162790364-1"
 
 [Params]
   subtitle = "臨淵羡魚，不如退而結網"
-  logo = "lawrencesgj.jpg"
-  favicon = "lawrencesgj.jpg"
+  logo = "bugzongchai.png"
+  favicon = "bugzongchai.png"
   commit = false
   readingTime = true
   wordCount = true
