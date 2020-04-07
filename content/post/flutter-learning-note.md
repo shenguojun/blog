@@ -1,7 +1,6 @@
 ---
 title: "Flutter学习笔记"
 date: 2020-04-07T15:19:10+08:00
-author: 申国骏
 tags: ["flutter"]
 draft: true
 ---
