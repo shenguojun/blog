@@ -1,8 +1,7 @@
 ---
-title: "Flutter学习笔记（上）"
+title: "Flutter学习笔记——用户界面"
 date: 2020-04-07T15:19:10+08:00
 tags: ["flutter"]
-draft: true
 ---
 ![flutter-logo](https://shenguojun.github.io/image/flutter-logo.png)
 > 以下为对[Flutter官网](https://flutter.dev/docs)的学习总结，如果你想快速掌握知识点，或者想复习一下官网学习的内容，那么值得看看。
@@ -81,17 +80,111 @@ draft: true
 * 启动页会在Flutter绘制第一帧的时候被替换，如果在main方法中不调用runApp方法，那么启动页将一直展示。
 * 加入启动页的方式需要使用Android和iOS的本身的方式加入。
 ## 页面导航
-### 导航到新的页面和返回
+### 导航至新页面并返回
 * route在安卓中相当于Activity，在iOS中相当于ViewController，在Flutter中，route表示的只是一个widget
 * 页面导航的步骤：创建两个route，使用Navigator.push()导航到第二个route，使用Navigator.pop()返回到上一个route
+```dart
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => SecondRoute()),
+  )
+```
 * 通过创建MaterialPageRoute适配安卓和iOS页面跳转的动效，通过设置maintainState释放上一个页面的内存，通过fullscreenDialog设置是否全屏dialog样式
-### 使用具名的路由进行导航
-* 
-### 传递数据到新的页面
-### 使用具名路由传递参数
-### 从页面中返回数据
-### 在两个页面中共享元素动画
+### 使用具名路由跳转
+* 当页面之间跳转较多时，在MaterialApp中声明路由关系，然后使用具名路由导航Navigator.pushNamed()可以减少代码重复
+```dart
+  MaterialApp(
+  // Start the app with the "/" named route. In this case, the app starts
+  // on the FirstScreen widget.
+  initialRoute: '/',
+  routes: {
+    // When navigating to the "/" route, build the FirstScreen widget.
+    '/': (context) => FirstScreen(),
+    // When navigating to the "/second" route, build the SecondScreen widget.
+    '/second': (context) => SecondScreen(),
+  },
+);
+```
+```dart
+Navigator.pushNamed(context, '/second');
+```
+### 非具名路由之间传递数据
+* 使用非具名路由跳转有两种页面间传递数据的做法，一种是跳转新页面时在Widget的构造函数中传入数据；第二种是通过设置MaterialPageRoute的RouteSettings中的arguments，并在跳转页面中使用ModalRoute.of(context).settings.arguments获取
+```dart
+  // 第一种方法
+  Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailScreen(todo: todos[index]),
+        ),
+    );
+```
+```dart
+  // 第二种方法—设置参数
+  Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailScreen(),
+            // Pass the arguments as part of the RouteSettings. The
+            // DetailScreen reads the arguments from these settings.
+            settings: RouteSettings(
+                arguments: todos[index],
+            ),
+        ),
+    );
+```
+```dart
+  // 第二种方法—获取参数
+  final Todo todo = ModalRoute.of(context).settings.arguments;
+```
+### 具名路由之间传递数据
+* 使用具名路由跳转有两种页面间传输的做法，一种是使用Navigator.pushNamed并设置arguments，然后在跳转页面使用ModalRoute.of(context).settings.arguments获取；第二种是是使用Navigator.pushNamed并设置arguments，然后在MaterialApp的onGenerateRoute方法中获取settings.arguments并在返回的MaterialPageRoute中通过构造函数设置给跳转页面
+```dart
+  // 第一种方法—设置
+  Navigator.pushNamed(
+      context,
+      ExtractArgumentsScreen.routeName,
+      arguments: ScreenArguments(
+        'Extract Arguments Screen',
+        'This message is extracted in the build method.',
+      ),
+    );
+```
+```dart
+  // 第一种方法—获取
+  final ScreenArguments args = ModalRoute.of(context).settings.arguments;
+```
+```dart
+  // 第二种方法—通过onGenerateRoute方法构造目标页面并传递参数
+  MaterialApp(
+  // Provide a function to handle named routes. Use this function to
+  // identify the named route being pushed, and create the correct
+  // screen.
+  onGenerateRoute: (settings) {
+    // If you push the PassArguments route
+    if (settings.name == PassArgumentsScreen.routeName) {
+      // Cast the arguments to the correct type: ScreenArguments.
+      final ScreenArguments args = settings.arguments;
 
+      // Then, extract the required data from the arguments and
+      // pass the data to the correct screen.
+      return MaterialPageRoute(
+        builder: (context) {
+          return PassArgumentsScreen(
+            title: args.title,
+            message: args.message,
+          );
+        },
+      );
+    }
+  },
+);
+```
+### 从目标页面返回数据
+### 页面间共享元素动画
+
+
+## 动画
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
