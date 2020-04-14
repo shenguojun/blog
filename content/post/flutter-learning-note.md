@@ -181,8 +181,18 @@ Navigator.pushNamed(context, '/second');
 );
 ```
 ### 从目标页面返回数据
+* 使用Navigator.pop设置数据，并使用await获取Navigator.push返回结果
+```dart
+// 设置数据
+Navigator.pop(context, 'Yep!');
+// 获取数据
+final result = await Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => nextScreen()),
+  );
+```
 ### 页面间共享元素动画
-
+* 使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 ## 动画
 # 学习资源
