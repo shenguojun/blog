@@ -195,6 +195,8 @@ final result = await Navigator.push(
 * 使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 ## 动画
+### 动画介绍
+*
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
