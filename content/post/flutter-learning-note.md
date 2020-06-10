@@ -48,11 +48,30 @@ tags: ["flutter"]
 * FractionallySizedBox可以设置子widget占据其空间的宽高百分比
 * MediaQueryData中padding指代周边有多少不能绘制的区域不计算被键盘等遮挡的区域，viewPadding指的是周边有多少不能被绘制的区域不受键盘等遮挡影响，viewInsert表示周边有多少区域被键盘等遮挡了
 * OrientationBuilder获取屏幕是否旋转
-### Box constraints
+### constraints布局约束理解
+* 布局流程：
+  1. widget从parent中获取四个约束，分别是最小和最大宽度、最小和最大高度；
+  2. widget将约束一个一个地传递给子widget，并让子widget根据约束条件设定其自身的大小；
+  3. widget根据子widget的大小一个一个进行布局；
+  4. widget将自身的大小上报给parent。
+* 布局流程会导致以下三个限制：
+  1. 一个widget最终布局大小需要受到parent的约束限制，不是想要什么大小都可以；
+  2. 一个widget不能知道也不能决定其在屏幕中的位置，widget的布局由其parent决定；
+  3. 只有考虑整棵widget树才能确定widget的大小和位置，不能准确地定义某个widget的位置和大小。
+* Container布局行为：
+  1. 若没有子widget，没有设置宽高，没有约束，parent是无界约束，Container会填充parent，并希望让自身尽量的小
+  2. 若没有子widget，没有设置alignment，设置了宽高或者有约束，Container会在满足自身约束和parent约束的情况下尽量的小
+  3. 若没有子widget，没有设置宽高，没有约束，没有设置alignment，parent是有界约束，那么Container会尽量的扩大以满足parent的约束
+  4. 若设置了alignment，parent无界约束，那么Container尽量缩小为子widget大小
+  5. 若设置了alignment，parent有界约束，那么Container扩大为parent约束大小，并将子widget根据alignment设置来布局
+  6. 若只有子widget，没有设置宽高，没有约束，没有alignment，Container会将parent的约束传递给子widget，并尽量缩小为子widget大小
+* 布局中FittedBox可以控制子widget在约束空间中的布局，例如设置自动缩小文字或者缩放图片
+* tight约束表示固定宽高约束，loose约束表示在设置最大宽高基础上尽量的缩小
+### Box constraints边界约束
 * 有三种box，分别是无限扩展例如Center或者ListView、子widget决定例如Trnasform和Opacity、固定大小例如Image和Text
-* 类似于当一个竖向的ListView嵌套进了一个横向的Lis他View，会造成无界约束状态（Unbounded constraints），这种状态会使得子widget可以在两个方向无限扩展导致错误
-* Flex boxs指代Row和Column，表示当其处于一个有节的区域会不断扩展至给定大小，当其处于一个无界区域会适应他的子widget大小。
-* 如果将Flex box置于类似于ListView的widget中，那么flex box中不能有类似于Expanded的widget，这会导致类似于Expanded的widget无限扩大造成错误
+* 类似于当一个竖向的ListView嵌套进了一个横向的ListView，会造成无界约束状态（Unbounded constraints），这种状态会使得子widget可以在两个方向无限扩展导致错误
+* Flex boxs指的是Row和Column，表示当其处于一个有界的区域会不断扩展至给定大小，当其处于一个无界区域会适应他的子widget大小。
+* 如果将Flex box放置于类似于ListView的widget中，那么flex box中不能有类似于Expanded的widget，这会导致类似于Expanded的widget无限扩大造成错误
 * Column的宽度和Row的高度不能设置为无界的，否则他们的子widget将无法布局
 ## Android闪屏
 * 设置应用打开闪屏的设置与原生方式一样，都是给第一个打开的activity设置主题
@@ -201,3 +220,4 @@ final result = await Navigator.push(
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
 * [The Mahogany Staircase - Flutter's Layered Design](https://www.youtube.com/watch?v=dkyY9WCGMi0)
+* [Flutter: The Advanced Layout Rule Even Beginners Must Know](https://medium.com/flutter-community/flutter-the-advanced-layout-rule-even-beginners-must-know-edc9516d1a2)
