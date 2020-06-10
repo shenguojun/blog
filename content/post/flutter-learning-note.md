@@ -48,7 +48,7 @@ tags: ["flutter"]
 * FractionallySizedBox可以设置子widget占据其空间的宽高百分比
 * MediaQueryData中padding指代周边有多少不能绘制的区域不计算被键盘等遮挡的区域，viewPadding指的是周边有多少不能被绘制的区域不受键盘等遮挡影响，viewInsert表示周边有多少区域被键盘等遮挡了
 * OrientationBuilder获取屏幕是否旋转
-### constraints布局约束理解
+### Constraints布局约束理解
 * 布局流程：
   1. widget从parent中获取四个约束，分别是最小和最大宽度、最小和最大高度；
   2. widget将约束一个一个地传递给子widget，并让子widget根据约束条件设定其自身的大小；
@@ -214,8 +214,34 @@ final result = await Navigator.push(
 * 使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 ## 动画
-### 动画介绍
-*
+* 对于普通的修改大小和形状等的属性动画可以使用Implicit动画，设置动画时间duration、动画效果curve。常用的Implicit动画有以下这些：
+  * Align -> AnimatedAlign
+  * Container -> AnimatedContainer
+  * DefaulTextStyle -> AnimatedDefaulTextStyle
+  * Opacity -> AnimatedOpacity
+  * Padding -> AnimatedPadding
+  * PhysicalModel -> AnimatedPhysicalModel
+  * Positioned -> AnimatedPositioned
+  * PositionedDirectional -> AnimatedPositionedDirectional
+  * Theme -> AnimatedThemeSize -> AnimatedSize
+* 若没有能满足需求的Implicit动画widget，那么可以尝试使用TweenAnimationBuilder来实现自定义属性动画
+* 如果想要对动画进行播放控制，那么需要使用Explicit动画，并在turns中指定AnimationController。常用的Explicit动画有以下这些：
+  * SizeTransition
+  * FadeTransition
+  * AlignTransition
+  * ScaleTransition
+  * SlideTransition
+  * RotationTransition
+  * PositionedTransition
+  * DecoratedBoxTransition
+  * DefaultTextStyleTransition
+  * RelativePositionedTransition
+  * StatusTransitionWidget
+* 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
+* SingleTickerProviderStateMixin
+* mixin是线性叠加的代码继承，最后的类会覆盖前面类方法
+* mixin是类的一层一层叠加，类型判断可以为每一层的类
+* mixin更多强调的是代码的复用而不是类继承关系
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
