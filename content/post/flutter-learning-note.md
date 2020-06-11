@@ -210,8 +210,6 @@ final result = await Navigator.push(
     MaterialPageRoute(builder: (context) => nextScreen()),
   );
 ```
-### 页面间共享元素动画
-* 使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 ## 动画
 * 对于普通的修改大小和形状等的属性动画可以使用Implicit动画，设置动画时间duration、动画效果curve。常用的Implicit动画有以下这些：
@@ -237,11 +235,16 @@ final result = await Navigator.push(
   * DefaultTextStyleTransition
   * RelativePositionedTransition
   * StatusTransitionWidget
-* 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
+* Explicit动画的几个概念：
+  * `Animaion<double>`：CurvedAnimation和AnimationController都继承自`Animaion<double>`，通过Animaion可以获取动画的状态目前的插值，但是Animaion不会控制动画的绘制
+  *  CurvedAnimation用于定义动画的非线性过程；AnimationController用于控制动画播放进度，需要传入TickerProvider来减少处于屏幕外的动画资源消耗；Tween用于对Animation的范围进行转化；Animation可以通过设置Listners和StatusListeners来监听动画状态。
 * SingleTickerProviderStateMixin
 * mixin是线性叠加的代码继承，最后的类会覆盖前面类方法
 * mixin是类的一层一层叠加，类型判断可以为每一层的类
 * mixin更多强调的是代码的复用而不是类继承关系
+* 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
+* 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag
+
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
