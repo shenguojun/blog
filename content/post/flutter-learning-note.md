@@ -3,8 +3,6 @@ title: "Flutter学习笔记——用户界面"
 date: 2020-04-07T15:19:10+08:00
 tags: ["flutter"]
 ---
-[toc]
-
 ![flutter-logo](https://shenguojun.github.io/image/flutter-logo.png)
 > 以下为对[Flutter官网](https://flutter.dev/docs)的学习总结，如果你想快速掌握知识点，或者想复习一下官网学习的内容，那么值得看看。
 # 用户界面

@@ -45,3 +45,9 @@ googleAnalytics = "UA-162790364-1"
   email = "junguoshen@yeah.net"
   github = "shenguojun"
   linkedin = "guojunshen"
+
+[markup]
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = false
+    startLevel = 2
