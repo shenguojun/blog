@@ -3,6 +3,8 @@ title: "Flutter学习笔记——用户界面"
 date: 2020-04-07T15:19:10+08:00
 tags: ["flutter"]
 ---
+[toc]
+
 ![flutter-logo](https://shenguojun.github.io/image/flutter-logo.png)
 > 以下为对[Flutter官网](https://flutter.dev/docs)的学习总结，如果你想快速掌握知识点，或者想复习一下官网学习的内容，那么值得看看。
 # 用户界面
@@ -236,13 +238,13 @@ final result = await Navigator.push(
   * RelativePositionedTransition
   * StatusTransitionWidget
 * Explicit动画的几个概念：
-  * `Animaion<double>`：CurvedAnimation和AnimationController都继承自`Animaion<double>`，通过Animaion可以获取动画的状态目前的插值，但是Animaion不会控制动画的绘制
+  * `Animaion<double>`：CurvedAnimation和AnimationController都继承自`Animaion<double>`，通过Animaion可以获取动画的状态目前的插值，但是Animaion不会参与动画的绘制
   *  CurvedAnimation用于定义动画的非线性过程；AnimationController用于控制动画播放进度，需要传入TickerProvider来减少处于屏幕外的动画资源消耗；Tween用于对Animation的范围进行转化；Animation可以通过设置Listners和StatusListeners来监听动画状态。
-* SingleTickerProviderStateMixin
-* mixin是线性叠加的代码继承，最后的类会覆盖前面类方法
-* mixin是类的一层一层叠加，类型判断可以为每一层的类
-* mixin更多强调的是代码的复用而不是类继承关系
+* SingleTickerProviderStateMixin是TickerProvider的实现；mixin是线性叠加的代码继承，最后的类会覆盖前面类方法，mixin是类的一层一层叠加，类型判断可以为每一层的类，mixin更多强调的是代码的复用而不是类继承关系，mixin是一种类型不能实例化。参考：[When to use mixins and when to use interfaces in Dart?
+](https://stackoverflow.com/questions/45901297/when-to-use-mixins-and-when-to-use-interfaces-in-dart#:~:text=Mixins%20is%20all%20about%20how,that%20the%20class%20must%20satisfy.)
+  > Mixins is all about how a class does what it does, it's inheriting and sharing concrete implementation. Interfaces is all about what a class is, it is the abstract signature and promises that the class must satisfy. 
 * 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
+* 
 * 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 # 学习资源
