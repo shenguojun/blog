@@ -76,7 +76,7 @@ tags: ["flutter"]
 * 设置应用打开闪屏的设置与原生方式一样，都是给第一个打开的activity设置主题
 * 设置name为io.flutter.embedding.android.NormalTheme的meta-data来定义正常主题，这样就会使得页面从启动的主题转变为正常的主题。
 * 在Android Activity启动后，还需要初始化Dart isolate，这段时间可以再设置闪屏
-* 设置Flutter的闪屏有两种方法，一种是设置展示一个drawable，可以在Activity的Manifest中设置name为io.flutter.embedding.android.SplashScreenDrawable的meta-data并指定drawable资源，或在Fragment中重写provideSplashScreen方法返回一个DrawableSplashScreen对象。第二种方法是实现SplashScreen接口，通过createSplashView提供自定义闪屏view，并通过transitionToFlutter方法标记闪屏view动画是否完成。
+* 设置Flutter的闪屏有两种方法，一种是设置展示一个drawable，可以在Activity的Manifest中设置name为`io.flutter.embedding.android.SplashScreenDrawable`的meta-data并指定drawable资源，或在Fragment中重写provideSplashScreen方法返回一个DrawableSplashScreen对象。第二种方法是实现SplashScreen接口，通过createSplashView提供自定义闪屏view，并通过transitionToFlutter方法标记闪屏view动画是否完成。
 ## 加入互动逻辑
 * 可交互的widget有三点，一是有两个类，分别继承StatefulWidget和State，二是State类中拥有可变的状态和build方法，三是当状态变化，调用setState()方法对widget进行重绘。
 * 将Text放在SizedBox中可以防止当文字变化时由于宽度变化带来的位置抖动
@@ -211,6 +211,7 @@ final result = await Navigator.push(
 ```
 
 ## 动画
+### Implicit动画
 * 对于普通的修改大小和形状等的属性动画可以使用Implicit动画，设置动画时间duration、动画效果curve。常用的Implicit动画有以下这些：
   * Align -> AnimatedAlign
   * Container -> AnimatedContainer
@@ -222,6 +223,7 @@ final result = await Navigator.push(
   * PositionedDirectional -> AnimatedPositionedDirectional
   * Theme -> AnimatedThemeSize -> AnimatedSize
 * 若没有能满足需求的Implicit动画widget，那么可以尝试使用TweenAnimationBuilder来实现自定义属性动画
+### Explicit动画
 * 如果想要对动画进行播放控制，那么需要使用Explicit动画，并在turns中指定AnimationController。常用的Explicit动画有以下这些：
   * SizeTransition
   * FadeTransition
@@ -241,7 +243,9 @@ final result = await Navigator.push(
 ](https://stackoverflow.com/questions/45901297/when-to-use-mixins-and-when-to-use-interfaces-in-dart#:~:text=Mixins%20is%20all%20about%20how,that%20the%20class%20must%20satisfy.)
   > Mixins is all about how a class does what it does, it's inheriting and sharing concrete implementation. Interfaces is all about what a class is, it is the abstract signature and promises that the class must satisfy. 
 * 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
-* 
+* AnimatedWidget需要传入一个listenable，一般是Animation，也可以是 ChangeNotifier and ValueNotifier，AnimatedWidget会在listenable变化的时候调用setState重新build
+* 继承自AnimatedWidget一般命名为FooTransition,而继承自ImplicitlyAnimatedWidget一般命名为AnimatedFoo，这里Foo指的是没有加入动画的widget名字.AnimatedWidget与ImplicitlyAnimatedWidget的最大区别在于前者需要使用者自己维护一个Animation，可以对动画进行控制；后者自身会带一个Animation并维护自身的动画状态，不需要使用者参与管理。
+* 如果复杂一些需要知道动画的状态，那么需要使用AnimatedBuilder
 * 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 # 学习资源
