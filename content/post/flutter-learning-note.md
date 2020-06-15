@@ -243,9 +243,67 @@ final result = await Navigator.push(
 ](https://stackoverflow.com/questions/45901297/when-to-use-mixins-and-when-to-use-interfaces-in-dart#:~:text=Mixins%20is%20all%20about%20how,that%20the%20class%20must%20satisfy.)
   > Mixins is all about how a class does what it does, it's inheriting and sharing concrete implementation. Interfaces is all about what a class is, it is the abstract signature and promises that the class must satisfy. 
 * 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
-* AnimatedWidget需要传入一个listenable，一般是Animation，也可以是 ChangeNotifier and ValueNotifier，AnimatedWidget会在listenable变化的时候调用setState重新build
+* AnimatedWidget需要传入一个listenable，一般是Animation，也可以是 ChangeNotifier and ValueNotifier，AnimatedWidget会在listenable变化的时候调用setState重新build从而产生动画效果。
+  ```dart
+  // 不使用AnimatedWidget
+  animation = Tween<double>().animate(controller)
+    ..addListener(() {
+      setState((){});
+    };
+  ...
+  Widget build(BuildContext context) => GeneralWidget(animation);
+
+  // 使用AnimatedWidget
+  animation = Tween<double>().animate(controller);
+  ...
+  Widget build(BuildContext context) => AnimatedWidget(animation);
+  ```
 * 继承自AnimatedWidget一般命名为FooTransition,而继承自ImplicitlyAnimatedWidget一般命名为AnimatedFoo，这里Foo指的是没有加入动画的widget名字.AnimatedWidget与ImplicitlyAnimatedWidget的最大区别在于前者需要使用者自己维护一个Animation，可以对动画进行控制；后者自身会带一个Animation并维护自身的动画状态，不需要使用者参与管理。
-* 如果复杂一些需要知道动画的状态，那么需要使用AnimatedBuilder
+* 如果构造复杂的动画，可以使用AnimatedBuilder。为了性能考虑，可以在AnimatedBuilder中指定动画元素child，并在builder中将child传入动画中，避免每次动画tick回调都会重新build child。
+```dart
+class _SpinnerState extends State  with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 10),
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      child: Container(
+        width: 200.0,
+        height: 200.0,
+        color: Colors.green,
+        child: const Center(
+          child: Text('Wee'),
+        ),
+      ),
+      builder: (BuildContext context, Widget child) {
+        return Transform.rotate(
+          angle: _controller.value * 2.0 * math.pi,
+          child: child,
+        );
+      },
+    );
+  }
+}
+```
+[动画效果](https://flutter.github.io/assets-for-api-docs/assets/widgets/animated_builder.mp4)
+* 可以对Animation使用addStatusListener添加动画状态监听。
+* 使用SpringSimulation可以产生物理的弹性效果。
 * 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag
 
 # 学习资源
