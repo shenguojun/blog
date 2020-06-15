@@ -304,10 +304,16 @@ class _SpinnerState extends State  with SingleTickerProviderStateMixin {
 [动画效果](https://flutter.github.io/assets-for-api-docs/assets/widgets/animated_builder.mp4)
 * 可以对Animation使用addStatusListener添加动画状态监听。
 * 使用SpringSimulation可以产生物理的弹性效果。
+### Hero动画
 * 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag
-
+### 交错动画
+## 高级UI
+### Silvers
+### Gestures
+### 闪屏
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
 * [The Mahogany Staircase - Flutter's Layered Design](https://www.youtube.com/watch?v=dkyY9WCGMi0)
 * [Flutter: The Advanced Layout Rule Even Beginners Must Know](https://medium.com/flutter-community/flutter-the-advanced-layout-rule-even-beginners-must-know-edc9516d1a2)
+* [Widget库](https://flutter.dev/docs/development/ui/widgets)
