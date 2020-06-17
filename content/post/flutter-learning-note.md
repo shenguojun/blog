@@ -72,11 +72,6 @@ tags: ["flutter"]
 * Flex boxs指的是Row和Column，表示当其处于一个有界的区域会不断扩展至给定大小，当其处于一个无界区域会适应他的子widget大小。
 * 如果将Flex box放置于类似于ListView的widget中，那么flex box中不能有类似于Expanded的widget，这会导致类似于Expanded的widget无限扩大造成错误
 * Column的宽度和Row的高度不能设置为无界的，否则他们的子widget将无法布局
-## Android闪屏
-* 设置应用打开闪屏的设置与原生方式一样，都是给第一个打开的activity设置主题
-* 设置name为io.flutter.embedding.android.NormalTheme的meta-data来定义正常主题，这样就会使得页面从启动的主题转变为正常的主题。
-* 在Android Activity启动后，还需要初始化Dart isolate，这段时间可以再设置闪屏
-* 设置Flutter的闪屏有两种方法，一种是设置展示一个drawable，可以在Activity的Manifest中设置name为`io.flutter.embedding.android.SplashScreenDrawable`的meta-data并指定drawable资源，或在Fragment中重写provideSplashScreen方法返回一个DrawableSplashScreen对象。第二种方法是实现SplashScreen接口，通过createSplashView提供自定义闪屏view，并通过transitionToFlutter方法标记闪屏view动画是否完成。
 ## 加入互动逻辑
 * 可交互的widget有三点，一是有两个类，分别继承StatefulWidget和State，二是State类中拥有可变的状态和build方法，三是当状态变化，调用setState()方法对widget进行重绘。
 * 将Text放在SizedBox中可以防止当文字变化时由于宽度变化带来的位置抖动
@@ -305,12 +300,19 @@ class _SpinnerState extends State  with SingleTickerProviderStateMixin {
 * 可以对Animation使用addStatusListener添加动画状态监听。
 * 使用SpringSimulation可以产生物理的弹性效果。
 ### Hero动画
-* 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag
+* 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag。当路由push和pop的时候都会触发动画。
+* 共享元素能在两个页面之间过渡，其原理是使用了application overlay widget，并使用RecTween生成过渡动画。
 ### 交错动画
 ## 高级UI
 ### Silvers
 ### Gestures
 ### 闪屏
+#### Android
+* 设置应用打开闪屏的设置与原生方式一样，都是给第一个打开的activity设置主题
+* 设置name为io.flutter.embedding.android.NormalTheme的meta-data来定义正常主题，这样就会使得页面从启动的主题转变为正常的主题。
+* 在Android Activity启动后，还需要初始化Dart isolate，这段时间可以再设置闪屏
+* 设置Flutter的闪屏有两种方法，一种是设置展示一个drawable，可以在Activity的Manifest中设置name为`io.flutter.embedding.android.SplashScreenDrawable`的meta-data并指定drawable资源，或在Fragment中重写provideSplashScreen方法返回一个DrawableSplashScreen对象。第二种方法是实现SplashScreen接口，通过createSplashView提供自定义闪屏view，并通过transitionToFlutter方法标记闪屏view动画是否完成。
+#### iOS
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
