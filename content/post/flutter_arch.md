@@ -24,6 +24,9 @@ tags: ["flutter"]
 * ChangeNotifier添加和删除listener复杂度是O(n)，消息发送复杂度是O(N^2)
 * Provider
 
+# BLoC
+* 缺点：为了dispose释放资源需要大量的StatefulWidget，可以结合Provider优化
+
 # 参考
 * [Flutter guide - State management](https://flutter.dev/docs/development/data-and-backend/state-mgmt/intro)
 * [Flutter architecture samples](https://github.com/brianegan/flutter_architecture_samples)
