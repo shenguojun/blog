@@ -22,7 +22,7 @@ tags: ["flutter"]
 
 # ChangeNotifier + Provider
 * ChangeNotifier添加和删除listener复杂度是O(n)，消息发送复杂度是O(N^2)
-* Provider
+* Provider底层也是使用InheritedWidget，原理是ChangeNotifierProvider将widget包裹在InheritedWidget中，并将继承自ChangeNotifier的数据Model对象放到内置的InheritedWidget对象中，当调用Provider.of的时候对数据Model添加listener，并在数据Model调用notifyListeners()方法时，设置markNeedsBuild()刷新界面。
 
 # BLoC
 * 缺点：为了dispose释放资源需要大量的StatefulWidget，可以结合Provider优化
