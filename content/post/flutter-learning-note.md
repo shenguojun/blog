@@ -302,7 +302,25 @@ class _SpinnerState extends State  with SingleTickerProviderStateMixin {
 ### Hero动画
 * 页面间共享元素：使用Hero包裹页面间的共享widget，并设置一个相同的tag。当路由push和pop的时候都会触发动画。
 * 共享元素能在两个页面之间过渡，其原理是使用了application overlay widget，并使用RecTween生成过渡动画。
-### 交错动画
+* debug过程中可以使用`scheduler.dart`中的timeDilation减慢动画效果
+* 在Hero中声明createRectTween为MaterialRectCenterArcTween可以使得动画产生中心变化的效果，默认的情况是使用Hero的四个角，如果形状变化的动画可以会产生变形。
+* 如果想要更自然的形状变化效果，可以根据Hero动画过程中的大小变化动态设置目标位置大小，例子见[radial_hero_animation_animate_rectclip](https://github.com/flutter/website/blob/master/examples/_animation/radial_hero_animation_animate_rectclip/main.dart)
+### 交替动画
+* 通过指定Animation的curve为Interval来设置动画在Controller0到1之间出现的时机
+  ```dart
+  borderRadius = BorderRadiusTween(
+      begin: BorderRadius.circular(4.0),
+      end: BorderRadius.circular(75.0),
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(
+          0.375, 0.500,
+          curve: Curves.ease,
+        ),
+      ),
+    ),
+  ```
 ## 高级UI
 ### Silvers
 ### Gestures
