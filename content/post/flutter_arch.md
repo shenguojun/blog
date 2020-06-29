@@ -2,6 +2,7 @@
 title: "Flutter架构综述"
 date: 2020-06-17T14:01:07+08:00
 tags: ["flutter"]
+draft: true
 ---
 >本文是对[TodoMVC for Flutter](https://github.com/brianegan/flutter_architecture_samples)中提到架构的总结
 

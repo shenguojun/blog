@@ -1,6 +1,7 @@
 ---
 title: "OKDownload下载框架详解"
 date: 2020-06-19T14:58:54+08:00
+draft: true
 ---
 [OKDowload](https://github.com/lingochamp/okdownload)是流利说开源的一个下载工具，是之前同样开源的[FileDownloader](https://github.com/lingochamp/FileDownloader)的升级版，拥有多线程分块下载、断点续传、完备的下载回调、可以获取下载断点状态、高性能、设置下载优先级等特性。
 
