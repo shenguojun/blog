@@ -28,7 +28,7 @@ tags: ["flutter"]
 * GridView.builder用于数量较多的item展示，仅加载当前可见的部分，GridView.count用于加载少量固定数目的item并指定每行item格式，GridView.extend用于加载少量固定item并指定每行item最大宽度
 * GridView中通过SliverGridDelegate控制子widget如何布局，通过SliverChildDelegate来获取子widget，可以通过自定义来实现自由或者叠加布局。
 * GridView和ListView都继承自BoxScrollView
-* 大量数据需使用ListView.builder并在itemBuilder回调中创建并提供widget；如果列表的item样式可以提前构建则可以直接使用new ListView；ListView.separated除了itemBuilder之外还有个separatorBuilder用来定义分隔线样式；ListView.custom通过提供自定义的SliverChildDelegate来
+* 大量数据需使用ListView.builder并在itemBuilder回调中创建并提供widget；如果列表的item样式可以提前构建则可以直接使用new ListView；ListView.separated除了itemBuilder之外还有个separatorBuilder用来定义分隔线样式；ListView.custom通过提供自定义的SliverChildDelegate来实现自定义的列表加载和缓存逻辑。
 * Stack用于widget的堆叠，可以做渐变的图片阴影
 * Card内部内容不能够滚动，可以自定义圆角和阴影大小
 * ListTitle是方便构建至多三行文字加上前后图标的列表item widget
@@ -323,6 +323,8 @@ class _SpinnerState extends State  with SingleTickerProviderStateMixin {
   ```
 ## 高级UI
 ### Silvers
+* ListView和GridView中分别用到了SliverList和SliverGrid，他们都继承自SliverMultiBoxAdaptorWidget，而SliverChildDelegate则是这两个类的构造函数的主要参数。SliverChildDelegate有SliverChildBuilderDelegate和SliverChildListDelegate两个实现类。这里delegate的意思是负责创建列表的item，以实现根据当前可视窗口来构建item，避免一次性大量构建没必要的item的问题。
+* 在SliverWidget涉及到RenderSliver
 ### Gestures
 ### 闪屏
 #### Android
