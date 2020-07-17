@@ -19,14 +19,14 @@ tags: ["flutter"]
 * key分为Local key（value key表示根据某个值判断、Object key表示根据某个对象判断、Unique key表示每个widget都不一样） 和Global key(表示不同页面的widget共享)，
 ## 构建layouts
 ### Flutter中的layouts
-* 可以通过Row和Column构建复制页面
+* 可以通过Row和Column构建复杂页面
 * mainAxisAlignment控制主轴对齐方式，crossAxisAlignment控制次轴对齐方式
 * 使用Expanded widget来fit window，flex来指定比例
 * 将布局widget赋值给变量，通过变量组合布局减少层级嵌套
 * 使用Container设置margin、border、pandding和背景
 * GridView.extend中maxCrossAxisExtent设置每个item的最大宽度，mainAxisSpacing设置主轴item之间的间隔，crossAxisSpacing设置次轴item之间的间隔，childAspectRatio设置item宽高比例
 * GridView.builder用于数量较多的item展示，仅加载当前可见的部分，GridView.count用于加载少量固定数目的item并指定每行item格式，GridView.extend用于加载少量固定item并指定每行item最大宽度
-* GridView中通过SliverGridDelegate控制子widget如何布局，通过SliverChildDelegate来获取子widget，可以通过自定义来实现自由或者叠加布局。
+* GridView中通过SliverGridDelegate控制子widget如何布局，通过SliverChildDelegate来获取子widget，可以通过自定义Delegate来实现自由或者叠加布局。
 * GridView和ListView都继承自BoxScrollView
 * 大量数据需使用ListView.builder并在itemBuilder回调中创建并提供widget；如果列表的item样式可以提前构建则可以直接使用new ListView；ListView.separated除了itemBuilder之外还有个separatorBuilder用来定义分隔线样式；ListView.custom通过提供自定义的SliverChildDelegate来实现自定义的列表加载和缓存逻辑。
 * Stack用于widget的堆叠，可以做渐变的图片阴影
@@ -88,7 +88,7 @@ tags: ["flutter"]
 * 使用AssetImage加载图片会自动选择对应分辨率的图片，如果需要加载不同package的图片，需要在AssetImange中指定package
 * 对于不在同一个package的图片资源，也需要在pubspec.yaml文件中定义，例如需要引用package为fancy_backgrounds的图资源，需要在当前的pubspec.yaml中定义assets路径为packages/fancy_backgrounds/xxx(图片在fancy_backgrounds中libs目录下的相对位置)
 * 在Android中使用flutter的asset资源，使用PluginRegistry.Registrar.lookupKeyForAsset()方法获取key，并使用AssetManager.openFd(key)方法获取AssetFileDescriptor
-* 在iOS中使用flutter的asset资源，可以使用registrar lookupKeyForAsset或者key，然后通过mainBundle pathForResource:key ofType或者asset路径。如果使用了ios_platform_images插件，那么可以直接使用OC中的UIImage flutterImageWithName或者Swift中的UIImage.flutterImageNamed获取。
+* 在iOS中使用flutter的asset资源，可以使用registrar lookupKeyForAsset或者key，然后通过mainBundle pathForResource:key ofType获取asset路径。如果使用了ios_platform_images插件，那么可以直接使用OC中的UIImage flutterImageWithName或者Swift中的UIImage.flutterImageNamed获取。
 * flutter中使用iOS的图片可以使用ios_platform_images插件中的IosPlatformImages.load方法
 * 启动页会在Flutter绘制第一帧的时候被替换，如果在main方法中不调用runApp方法，那么启动页将一直展示。
 * 加入启动页的方式需要使用Android和iOS的本身的方式加入。
@@ -238,7 +238,7 @@ final result = await Navigator.push(
 ](https://stackoverflow.com/questions/45901297/when-to-use-mixins-and-when-to-use-interfaces-in-dart#:~:text=Mixins%20is%20all%20about%20how,that%20the%20class%20must%20satisfy.)
   > Mixins is all about how a class does what it does, it's inheriting and sharing concrete implementation. Interfaces is all about what a class is, it is the abstract signature and promises that the class must satisfy. 
 * 如果想对动画进行播放控制，但是没有现成的Explicit动画，那么可以使用AnimatedBuilder或者AnimatedWidget
-* AnimatedWidget需要传入一个listenable，一般是Animation，也可以是 ChangeNotifier and ValueNotifier，AnimatedWidget会在listenable变化的时候调用setState重新build从而产生动画效果。
+* AnimatedWidget需要传入一个listenable，一般是Animation，也可以是 ChangeNotifier 或者 ValueNotifier，AnimatedWidget会在listenable变化的时候调用setState重新build从而产生动画效果。
   ```dart
   // 不使用AnimatedWidget
   animation = Tween<double>().animate(controller)
@@ -253,7 +253,7 @@ final result = await Navigator.push(
   ...
   Widget build(BuildContext context) => AnimatedWidget(animation);
   ```
-* 继承自AnimatedWidget一般命名为FooTransition,而继承自ImplicitlyAnimatedWidget一般命名为AnimatedFoo，这里Foo指的是没有加入动画的widget名字.AnimatedWidget与ImplicitlyAnimatedWidget的最大区别在于前者需要使用者自己维护一个Animation，可以对动画进行控制；后者自身会带一个Animation并维护自身的动画状态，不需要使用者参与管理。
+* 继承自AnimatedWidget一般命名为FooTransition,而继承自ImplicitlyAnimatedWidget一般命名为AnimatedFoo，这里Foo指的是没有加入动画的widget名字。AnimatedWidget与ImplicitlyAnimatedWidget的最大区别在于前者需要使用者自己维护一个Animation，可以对动画进行控制；后者自身会带一个Animation并维护自身的动画状态，不需要使用者参与管理。
 * 如果构造复杂的动画，可以使用AnimatedBuilder。为了性能考虑，可以在AnimatedBuilder中指定动画元素child，并在builder中将child传入动画中，避免每次动画tick回调都会重新build child。
 ```dart
 class _SpinnerState extends State  with SingleTickerProviderStateMixin {
