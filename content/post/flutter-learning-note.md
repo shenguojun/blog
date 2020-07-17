@@ -323,9 +323,13 @@ class _SpinnerState extends State  with SingleTickerProviderStateMixin {
   ```
 ## 高级UI
 ### Silvers
+* Silver表示一部分可以滑动的区域。
 * ListView和GridView中分别用到了SliverList和SliverGrid，他们都继承自SliverMultiBoxAdaptorWidget，而SliverChildDelegate则是这两个类的构造函数的主要参数。SliverChildDelegate有SliverChildBuilderDelegate和SliverChildListDelegate两个实现类。这里delegate的意思是负责创建列表的item，以实现根据当前可视窗口来构建item，避免一次性大量构建没必要的item的问题。
-* 在SliverWidget涉及到RenderSliver
+* 在SliverWidget对应的render对象是RenderSliver。可滚动widget外部是由一个Viewport包裹。RenderSliver就是布局在Viewport之中的子节点，可以接受viewport的可视窗口信息，以实现各种滚动效果，例如可折叠标题和parallax视差效果。
 ### Gestures
+* 有两种方式可以监听手势事件，分别是Listener中监听Point的Down,Move,Up,Cancel操作，还有GestureDetector中监听更为直观的手势操作，例如onTap，onLongPress，onScaleUpdate等。前者可以用于获取点击的坐标以及手势的详细信息，后者可以用于快速实现手势监听。
+* 当出现手势监听冲突时，会在手势动作后延迟一段时间来对监听进行优胜竞争，胜利的会得到监听回调
+* 可以使用CustomScrollView+Sliver的方式实现多个样式的滑动组合，解决滑动冲突
 ### 闪屏
 #### Android
 * 设置应用打开闪屏的设置与原生方式一样，都是给第一个打开的activity设置主题
