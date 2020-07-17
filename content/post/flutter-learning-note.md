@@ -331,12 +331,13 @@ class _SpinnerState extends State  with SingleTickerProviderStateMixin {
 * 当出现手势监听冲突时，会在手势动作后延迟一段时间来对监听进行优胜竞争，胜利的会得到监听回调
 * 可以使用CustomScrollView+Sliver的方式实现多个样式的滑动组合，解决滑动冲突
 ### 闪屏
+#### iOS
+* 通过Xcode storyboard进行设置
 #### Android
 * 设置应用打开闪屏的设置与原生方式一样，都是给第一个打开的activity设置主题
 * 设置name为io.flutter.embedding.android.NormalTheme的meta-data来定义正常主题，这样就会使得页面从启动的主题转变为正常的主题。
 * 在Android Activity启动后，还需要初始化Dart isolate，这段时间可以再设置闪屏
 * 设置Flutter的闪屏有两种方法，一种是设置展示一个drawable，可以在Activity的Manifest中设置name为`io.flutter.embedding.android.SplashScreenDrawable`的meta-data并指定drawable资源，或在Fragment中重写provideSplashScreen方法返回一个DrawableSplashScreen对象。第二种方法是实现SplashScreen接口，通过createSplashView提供自定义闪屏view，并通过transitionToFlutter方法标记闪屏view动画是否完成。
-#### iOS
 # 学习资源
 * [Flutter samples](https://github.com/flutter/samples/blob/master/INDEX.md)
 * [Flutter YouTube playlist](https://www.youtube.com/channel/UCwXdFgeE9KYzlDdR7TG9cMw/playlists)
