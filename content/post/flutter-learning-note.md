@@ -4,6 +4,7 @@ date: 2020-04-07T15:19:10+08:00
 tags: ["flutter"]
 ---
 > 以下为对[Flutter官网](https://flutter.dev/docs)的学习总结，如果你想快速掌握知识点，或者想复习一下官网学习的内容，那么值得看看。
+> 转载请注明出处：[Lawrence_Shen](https://shenguojun.github.io/post/flutter-learning-note/)
 # 用户界面
 ## widgets介绍
 * Flutter一切都是widget，包括设置padding的container。
