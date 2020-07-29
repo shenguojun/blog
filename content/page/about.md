@@ -16,6 +16,6 @@ Looking forward to building amazing software that can make our daily life better
 * Ericsson (Software Engineering Intern from 2013) 
 * UCWeb Inc. (Test Engineering Intern from 2011) 
 
-### EDUCATION
+## EDUCATION
 * Sun Yat-Sen University (Master's degree Computer Science from 2012 - 2015) 
 * South China University of Technology (Bachelor's degree Computer Science from 2008 - 2012) 
