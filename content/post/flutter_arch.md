@@ -26,7 +26,8 @@ draft: true
 * 缺点：
 * 优点：
 
-# BLoC
+# BLoC (Business Logic Component)
+
 * 缺点：为了dispose释放资源需要大量的StatefulWidget，可以结合Provider优化
 
 # 参考
