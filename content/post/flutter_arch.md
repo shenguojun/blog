@@ -17,7 +17,7 @@ draft: true
 * 缺点：每层传递代码不简洁、每次修改触发整体build
 
 # InheritedWidget
-原理：将数据保存在最外层的widget，在子widget通过dependOnInheritedWidgetOfExactType的方法获取数据和调用数据操作方法，触发最外层widgetsetState完成界面刷新。[代码例子](https://github.com/brianegan/flutter_architecture_samples/tree/master/inherited_widget)
+原理：将数据保存在最外层的widget，在子widget通过dependOnInheritedWidgetOfExactType的方法获取数据和调用数据操作方法，触发最外层widgetsetState完成界面刷新。具体原理看这个博客:[从 Flutter 源码看 InheritedWidget 内部实现原理](https://loveky.github.io/2018/07/18/how-flutter-inheritedwidget-works/)。[代码例子](https://github.com/brianegan/flutter_architecture_samples/tree/master/inherited_widget)
 * 缺点：每次修改触发整体build
 * 优点：不需要每层传递代码、代码较为简洁易懂
 
@@ -27,7 +27,7 @@ draft: true
 * 优点：
 
 # BLoC (Business Logic Component)
-
+![bloc-architecture](https://shenguojun.github.io/image/bloc-architecture.jpg)
 * 缺点：为了dispose释放资源需要大量的StatefulWidget，可以结合Provider优化
 
 # 参考
