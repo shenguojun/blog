@@ -563,14 +563,7 @@ private void updateForceDarkMode() {
 
 而这个方法正式在`ViewRootImpl.enableHardwareAcceleration()`方法中调用的，因此可以得到第一个结论：**强制深色模式只在硬件加速下生效**。由于`userAutoDark`变量会判断当前主题是否为浅色，因此可以得到第二个结论：**强制深色模式只在浅色主题下生效**。直到这一步的调用链如下：
 
-```mermaid
-sequenceDiagram
-    ActivityThread->>ActivityThread: handleResumeActivity()
-    ActivityThread->>WindowManagerGlobal:addView()
-    WindowManagerGlobal->>ViewRootImpl:setView()
-    ViewRootImpl->>ViewRootImpl: enableHardwareAcceleration()
-    ViewRootImpl->>ViewRootImpl: updateForceDarkMode()
-```
+![image-20201012103035909.png](https://github.com/shenguojun/ImageServer/blob/master/uPic/image-20201012103035909.png?raw=true)
 
 `mAttachInfo.mThreadedRenderer`为`ThreadRenderer`，继承自`HardwareRenderer`，指定了接下来的渲染操作由RanderThread执行。继续跟踪`setForceDark()`方法：
 
@@ -669,23 +662,7 @@ public:
 
 这个变量最终会用在RenderNode的`RenderNode.handleForceDark()`过程中，到达的流程如下图：
 
-```mermaid
-sequenceDiagram
-    ViewRootImpl->>ViewRootImpl: draw()
-    ViewRootImpl->>ThreadedRenderer: draw()
-    ThreadedRenderer->>HardwareRenderer: syncAndDrawFrame()
-    HardwareRenderer->>RenderProxy: JNI调用-syncAndDrawFrame()
-    RenderProxy->>DrawFrameTask: drawFrame()
-    DrawFrameTask->>DrawFrameTask: postAndWait()
-    DrawFrameTask->>DrawFrameTask: run()
-    DrawFrameTask->>DrawFrameTask: syncFrameState()
-    DrawFrameTask->>CanvasContext: prepareTree()
-    CanvasContext->>RenderNode: prepareTree()
-    RenderNode->>RenderNode: prepareTreeImpl()
-    RenderNode->>RenderNode: pushStagingDisplayListChanges()
-    RenderNode->>RenderNode: syncDisplayList()
-    RenderNode->>RenderNode: handleForceDark()
-```
+![image-20201012103247032.png](https://github.com/shenguojun/ImageServer/blob/master/uPic/image-20201012103247032.png?raw=true)
 
   **[frameworks/base/libs/hwui/RenderNode.cpp](https://cs.android.com/android/platform/superproject/+/master:frameworks/base/libs/hwui/RenderNode.cpp;l=235;drc=master;bpv=0;bpt=1)**
 
