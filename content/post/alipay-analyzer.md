@@ -48,7 +48,7 @@ AndroidManifest.xml
     <meta-data android:name="com.huawei.messaging.default_notification_icon" android:resource="@drawable/appicon_push" />
 ```
 
-LuanchApplication
+LaunchApplication
 
 ```java
 protected void attachBaseContext(Context arg3) {
