@@ -34,7 +34,7 @@ JVM是stack-based的运行环境，在移动设备中对性能和存储空间要
 
 ### ART-AOT(Android 4.4/5.0)
 
-为了加快应用的启动速度和体验，到了Android4.4，Google提供了一个新的运行时环境ART(Android Runtime)，到了Android5.0，ART替换Dalvik称为唯一的运行时环境。
+为了加快应用的启动速度和体验，到了Android4.4，Google提供了一个新的运行时环境ART(Android Runtime)，到了Android5.0，ART替换Dalvik成为唯一的运行时环境。
 
 ![image-20210630153852139](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210630153852139.png)
 
@@ -64,9 +64,15 @@ ART运行时环境中，采用了AOT(Ahead-of-time)编译方式，即在应用�
 
 这样就可以在应用安装速度以及应用打开速度之间取的平衡。
 
+![image-20210630184913469](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210630184913469.png)
+
 ![img](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/1*tCwFSndZOofgYb-TNNWhCw.png)
 
-### ART-Cloud profile(Android 9.0)
+![JIT architecture](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/jit-workflow.png)
+
+![image-20210707154712519](/Users/shen/Library/Application Support/typora-user-images/image-20210707154712519.png)
+
+### ART-Cloud Profile(Android 9.0)
 
 不过这里还是有一个问题，就是当用户第一次安装应用的时候并没有进行任何的AOT优化，通常会经过用户多次的使用才能使得启动速度得到优化。
 
@@ -76,7 +82,118 @@ ART运行时环境中，采用了AOT(Ahead-of-time)编译方式，即在应用�
 
 ![img](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image4.png)
 
+![image-20210708153531874](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210708153531874.png)
+
+![image-20210708153958013](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210708153958013.png)
+
+![image-20210708160128463](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210708160128463.png)
+
+profile in cloude 需要系统应用市场支持
+
+## Dexlayout
+
+Dexlayout is a library introduced in Android 8.0 to analyze dex files and reorder them according to a profile. Dexlayout aims to use runtime profiling information to reorder sections of the dex file during idle maintenance compilation on device. By grouping together parts of the dex file that are often accessed together, programs can have better memory access patterns from improved locality, saving RAM and shortening start up time.
+
+Since profile information is currently available only after apps have been run, dexlayout is integrated in dex2oat's on-device compilation during idle maintenance.
+
+
+
+The number of files, their extensions, and names are subject to change across releases, but as of the Android O release, the files being generated are:
+
+- `.vdex`: contains the uncompressed DEX code of the APK, with some additional metadata to speed up verification.
+- `.odex`: contains AOT compiled code for methods in the APK.
+- `.art (optional)`: contains ART internal representations of some strings and classes listed in the APK, used to speed application startup.
+
+
+
+One core ART option to configure these two categories is *compiler filters*. Compiler filters drive how ART compiles DEX code and is an option passed to the `dex2oat` tool. Starting in Android O, there are four officially supported filters:
+
+- *verify*: only run DEX code verification.
+- *quicken*: run DEX code verification and optimize some DEX instructions to get better interpreter performance.
+- *speed*: run DEX code verification and AOT-compile all methods.
+- *speed-profile*: run DEX code verification and AOT-compile methods listed in a profile file.
+
+
+
+## Forcing compilation
+
+To force compilation, run the following:
+
+```
+adb shell cmd package compile
+```
+
+Common use cases for force compiling a specific package:
+
+- Profile-based:
+
+  ```
+  adb shell cmd package compile -m speed-profile -f my-package
+  ```
+
+- Full:
+
+  ```
+  adb shell cmd package compile -m speed -f my-package
+  ```
+
+
+
+## Clearing profile data
+
+To clear profile data and remove compiled code, run the following:
+
+- For one package:
+
+  ```
+  adb shell cmd package compile --reset my-package
+  ```
+
+
+
+To understand how these code profiles achieve better performance, we need to look at their structure. Code profiles contain information about:
+
+- Classes loaded during startup
+- Hot methods that the runtime deemed worthy of optimizations
+- The layout of the code (e.g. code that executes during startup or post-startup)
+
+Using this information, we use a variety of optimization techniques, out of which the following three provide most of the benefits:
+
+- [App Images](https://youtu.be/fwMM6g7wpQ8?t=2145): 
+
+  We use the start up classes to build a pre-populated heap where the classes are pre-initialized (called an app image). When the application starts, we map the image directly into memory so that all the startup classes are readily available.
+
+  - The benefit here is that the app's execution saves cycles since it doesn't need to do the work again, leading to a faster startup time.
+
+  App images are a memory map of pre-initialized classes that are used at startup. The image is directly mapped to the memory heap on launch. Similarly, code-precompilation targets code that is executed when the app launches. This code is precompiled and optimized, sparing thus the time it takes for the JIT compiler to do its job. Finally, the bytecode re-layout of an app aims to keep close together code that is used at startup, code that is used immediately after startup, and the rest of the code, thus improving loading times.
+
+- *Code pre-compilation:* We pre-compile all the hot code. When the apps execute, the most important parts of the code are already optimized and ready to be natively executed. The app no longer needs to wait for the JIT compiler to kick in.
+
+- - The benefit is that the code is mapped as clean memory (compared to the JIT dirty memory) which improves the overall memory efficiency. The clean memory can be released by the kernel when under memory pressure while the dirty memory cannot, lessening the chances that the kernel will kill the app.
+
+- More efficient dex layout: 
+
+  We reorganize the dex bytecode based on method information the profile exposes. The dex bytecode layout will look like: [startup code, post startup code, the rest of non profiled code].
+
+  - The benefit of doing this is a much higher efficiency of loading the dex byte code in memory: The memory pages have a better occupancy, and since everything is together, we need to load less and we can do less I/O.
+
+
+
+
+
+dex文件目录：/data/
+
+profile文件目录：/data/misc/profiles/cur/0/{package_name}/primary.prof
+
 # 问题：
+
+## 支付宝新安装之后是否会编译出来oat，是否将profile放到了dex的metadata中
+
+支付宝安装不打开没有进行编译
+
+打开过之后会马上生成一个profile文件并有odex 和 vdex文件生成，手机空闲后生成.art文件
+
+相比之下词典需要打开多次才会生成profile文件
 
 ## 国内用不了Google Play怎么解决第一次启动的问题
 
