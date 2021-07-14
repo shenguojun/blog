@@ -391,6 +391,8 @@ tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile) {
 
 因此，可以推断是Kotin1.5版本中使用了新的JVM IR编译器导致的。
 
+报了个Bug给Jetbrains，后续保持关注：https://youtrack.jetbrains.com/issue/KT-47733
+
 ## 注意事项
 
 1. 使用synthetic需要注意在1.5之前是使用cache机制的，在一个类里面使用synthetic获取view会按照第一个获取到的view为准，因此如果一个类里面对应的viewid有重复的话，会以第一个为准。在1.5之后，就是每个地方都通过findviewbyid获取。
