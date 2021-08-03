@@ -181,9 +181,20 @@ Using this information, we use a variety of optimization techniques, out of whic
 
 
 
-dex文件目录：/data/
+#### /data/app/{一串奇怪的字符}/{package_name}一串奇怪的字符/
 
-profile文件目录：/data/misc/profiles/cur/0/{package_name}/primary.prof
+* base.apk
+* lib/arm/xxx.so
+* oat/arm/base.odex
+* oat/arm/base.vdex
+
+#### /data/data/{package_name}/oat/arm/
+
+* Anonymous-DexFile@xxx.vdex
+
+#### /data/misc/profiles/cur/0/{package_name}/
+
+* primary.prof
 
 # 问题：
 
