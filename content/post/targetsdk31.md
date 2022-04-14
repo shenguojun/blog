@@ -29,7 +29,7 @@ android:exported needs to be explicitly specified for element <activity#xxxActiv
 
 * Activity
 
-  true表示当前Activity需要被外部应用调用，例如桌面和应用需要打开当前应用首页，false表示当前Activity只能被当前的应用，或者具有相同userID的应用，或者有调用特权的系统components
+  true表示当前Activity需要被外部应用调用，例如桌面和应用需要打开当前应用首页，false表示当前Activity只能被当前的应用，或者具有相同userID的应用，或者有调用特权的系统components调用。
 
 * Service
 
