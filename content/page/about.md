@@ -3,7 +3,7 @@ title: About me
 comments: false
 ---
 
-I'm Lawrence(申国骏), from south China and now a senior software engineer in Netease Youdao. 
+I'm Lawrence(申国骏), from south China and now a senior software engineer and tech lead in Netease Youdao. 
 
 Experienced in Android, J2EE and Web development, have solid knowledge in Java / Kotin and JavaScript. Compatible team player through the whole project cycle as analysis, program design, testing and implementation.
 
