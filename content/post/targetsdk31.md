@@ -1,3 +1,10 @@
+---
+title: "TargetsdkVersion 升级31（Android12）适配"
+date: 2022-04-14T11:01:07+08:00
+author: 申国骏
+tags: ["android"]
+---
+
 # TargetsdkVersion 升级31（Android12）适配
 
 我们升级到Targetsdk29有大半年时间了，今年为了满足审查去除蓝牙的精确定位权限，以及满足上架Google Play的要求，需要将Targetsdkversion升级到31，适配到Android12。这个过程遇到不少坑，这里记录一下，希望能对大家有所帮助。
