@@ -194,7 +194,7 @@ Using this information, we use a variety of optimization techniques, out of whic
 
 #### /data/misc/profiles/cur/0/{package_name}/
 
-* primary.prof
+* primary.prof 30.55k
 
 # 问题：
 
