@@ -1,14 +1,13 @@
 ---
 title: "深入理解Android Runtime"
-date: 2021-06-30T11:07:45+08:00
+date: 2022-08-08T11:07:45+08:00
 author: 申国骏
 tags: ["android"]
-draft: true
 ---
 
 ![Android Platform Architecture](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/android-stack_2x.png)
 
-上图是Android整体的架构，Android Runtime之于Android而言相当于心脏之于人体，是Android程序加载和运行的环境。这篇文章主要针对Android Runtime部分进行展开，探讨Android Runtime的发展以及目前现状，并尝试利用Profile-Guided Optimization(PGO)技术对应用启动速度进行优化。
+上图是Android整体的架构，Android Runtime之于Android而言相当于心脏之于人体，是Android程序加载和运行的环境。这篇文章主要针对Android Runtime部分进行展开，探讨Android Runtime的发展以及目前现状，并介绍应用Profile-Guided Optimization(PGO)技术对应用启动速度进行优化的可行性。
 
 ## App运行时演进
 
@@ -62,15 +61,15 @@ ART运行时环境中，采用了AOT(Ahead-of-time)编译方式，即在应用�
 
 当应用重新打开时，进行过JIT和AOT编译的代码可以直接执行。
 
-这样就可以在应用安装速度以及应用打开速度之间取的平衡。
+这样就可以在应用安装速度以及应用打开速度之间取得平衡。
 
 ![image-20210630184913469](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210630184913469.png)
 
 ![img](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/1*tCwFSndZOofgYb-TNNWhCw.png)
 
-![JIT architecture](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/jit-workflow.png)
+JIT 工作流程：
 
-![image-20210707154712519](/Users/shen/Library/Application Support/typora-user-images/image-20210707154712519.png)
+![JIT architecture](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/jit-workflow.png)
 
 ### ART-Cloud Profile(Android 9.0)
 
@@ -82,134 +81,25 @@ ART运行时环境中，采用了AOT(Ahead-of-time)编译方式，即在应用�
 
 ![img](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image4.png)
 
-![image-20210708153531874](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210708153531874.png)
-
-![image-20210708153958013](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210708153958013.png)
-
 ![image-20210708160128463](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20210708160128463.png)
 
-profile in cloude 需要系统应用市场支持
+Profile in cloude 需要系统应用市场支持，在国内市场使用Google Play的占比非常低，因此cloud profile的优化在国内几乎是没有作用的，不过Profile的机制提供了一个可以做启动优化的思路。早在2019年，支付宝就在秒开技术的回应的里面提到过profile-based compile的技术，参考：[如何看待今日头条自媒体发布谣言称「支付宝几乎秒开是因为采用华为方舟编译器」？](https://www.zhihu.com/question/322429114)，这也是我们一直研究Profile技术的原因。困扰着我们的一直有两个问题，第一个问题是如何生成Profile文件，第二个问题是怎么使用生成的Profile文件。对于第一个问题的解决相对还是有思路的，因为app运行就会生成profile文件，因此我们手动运行几次app就能在文件系统中收集到这个文件，不过如何以一种较为自动化的手段收集仍然是个问题。第二个问题我们知道Profile文件最终生成的位置，因此我们可以把生成的文件放到相应的系统目录，不过大多数手机和应用都没有权限直接放置这个文件。因此Profile优化技术一直都没有落地，直到Baseline Proflie让我们看到了希望。
 
-## Dexlayout
+### Baseline Profile
 
-Dexlayout is a library introduced in Android 8.0 to analyze dex files and reorder them according to a profile. Dexlayout aims to use runtime profiling information to reorder sections of the dex file during idle maintenance compilation on device. By grouping together parts of the dex file that are often accessed together, programs can have better memory access patterns from improved locality, saving RAM and shortening start up time.
+Baseline Profile是一套生成和使用Profile文件的工具，在2022年一月份开始进入视野，随后在Google I/O 2022随着Jetpack新变化得到广泛关注。其背景是Google Map加快了发版速度，Cloud Profle还没完全收集好就上新版，导致Cloud Proflie失效。还有一个背景是Jetpack Compose 不是系统代码，因此没有完全编译成机器码，而且Jetpack Compose库比较大，因此在Profile生成之前使用了Jetpack Compose的应用启动会产生性能问题。最后Google为了解决这些问题，创造了收集Profile的BaselineProfileRule Macrobenchmark以及使用Profile的ProfileInstaller。
 
-Since profile information is currently available only after apps have been run, dexlayout is integrated in dex2oat's on-device compilation during idle maintenance.
+使用Baseline Profile的机制可以在Android7及以上的手机上得到应用的启动加速，因为从上述知道Android7就已经开始有PGO(Profile-guided optimization)的编译方式。生成的Profile文件会打包到apk里面，并且会结合Google Play的Cloud Profile来引导AOT编译。虽然在国内基本上用不了Cloud Profile，不过Baseline Profile是可以独立于Google Play单独使用的。
 
+![image-20220629114656005](https://raw.githubusercontent.com/shenguojun/ImageServer/master/uPic/image-20220629114656005.png)
 
+在使用了Baseline Proflie之后，有道词典的启动速度从线上统计上看，冷启动时间有15%的提升。
 
-The number of files, their extensions, and names are subject to change across releases, but as of the Android O release, the files being generated are:
-
-- `.vdex`: contains the uncompressed DEX code of the APK, with some additional metadata to speed up verification.
-- `.odex`: contains AOT compiled code for methods in the APK.
-- `.art (optional)`: contains ART internal representations of some strings and classes listed in the APK, used to speed application startup.
-
-
-
-One core ART option to configure these two categories is *compiler filters*. Compiler filters drive how ART compiles DEX code and is an option passed to the `dex2oat` tool. Starting in Android O, there are four officially supported filters:
-
-- *verify*: only run DEX code verification.
-- *quicken*: run DEX code verification and optimize some DEX instructions to get better interpreter performance.
-- *speed*: run DEX code verification and AOT-compile all methods.
-- *speed-profile*: run DEX code verification and AOT-compile methods listed in a profile file.
-
-
-
-## Forcing compilation
-
-To force compilation, run the following:
-
-```
-adb shell cmd package compile
-```
-
-Common use cases for force compiling a specific package:
-
-- Profile-based:
-
-  ```
-  adb shell cmd package compile -m speed-profile -f my-package
-  ```
-
-- Full:
-
-  ```
-  adb shell cmd package compile -m speed -f my-package
-  ```
-
-
-
-## Clearing profile data
-
-To clear profile data and remove compiled code, run the following:
-
-- For one package:
-
-  ```
-  adb shell cmd package compile --reset my-package
-  ```
-
-
-
-To understand how these code profiles achieve better performance, we need to look at their structure. Code profiles contain information about:
-
-- Classes loaded during startup
-- Hot methods that the runtime deemed worthy of optimizations
-- The layout of the code (e.g. code that executes during startup or post-startup)
-
-Using this information, we use a variety of optimization techniques, out of which the following three provide most of the benefits:
-
-- [App Images](https://youtu.be/fwMM6g7wpQ8?t=2145): 
-
-  We use the start up classes to build a pre-populated heap where the classes are pre-initialized (called an app image). When the application starts, we map the image directly into memory so that all the startup classes are readily available.
-
-  - The benefit here is that the app's execution saves cycles since it doesn't need to do the work again, leading to a faster startup time.
-
-  App images are a memory map of pre-initialized classes that are used at startup. The image is directly mapped to the memory heap on launch. Similarly, code-precompilation targets code that is executed when the app launches. This code is precompiled and optimized, sparing thus the time it takes for the JIT compiler to do its job. Finally, the bytecode re-layout of an app aims to keep close together code that is used at startup, code that is used immediately after startup, and the rest of the code, thus improving loading times.
-
-- *Code pre-compilation:* We pre-compile all the hot code. When the apps execute, the most important parts of the code are already optimized and ready to be natively executed. The app no longer needs to wait for the JIT compiler to kick in.
-
-- - The benefit is that the code is mapped as clean memory (compared to the JIT dirty memory) which improves the overall memory efficiency. The clean memory can be released by the kernel when under memory pressure while the dirty memory cannot, lessening the chances that the kernel will kill the app.
-
-- More efficient dex layout: 
-
-  We reorganize the dex bytecode based on method information the profile exposes. The dex bytecode layout will look like: [startup code, post startup code, the rest of non profiled code].
-
-  - The benefit of doing this is a much higher efficiency of loading the dex byte code in memory: The memory pages have a better occupancy, and since everything is together, we need to load less and we can do less I/O.
+这篇文章主要介绍了Android Runtime的演进以及对于应用启动的影响，下一篇文章我会详细介绍关于Profile&dex文件优化、Baseline Profile工具库原理，以及在实际操作上如何使用的问题，敬请大家期待一下！
 
 
 
 
-
-#### /data/app/{一串奇怪的字符}/{package_name}一串奇怪的字符/
-
-* base.apk
-* lib/arm/xxx.so
-* oat/arm/base.odex
-* oat/arm/base.vdex
-
-#### /data/data/{package_name}/oat/arm/
-
-* Anonymous-DexFile@xxx.vdex
-
-#### /data/misc/profiles/cur/0/{package_name}/
-
-* primary.prof 30.55k
-
-# 问题：
-
-## 支付宝新安装之后是否会编译出来oat，是否将profile放到了dex的metadata中
-
-支付宝安装不打开没有进行编译
-
-打开过之后会马上生成一个profile文件并有odex 和 vdex文件生成，手机空闲后生成.art文件
-
-相比之下词典需要打开多次才会生成profile文件
-
-## 国内用不了Google Play怎么解决第一次启动的问题
-
-## 如何手动生成Profiles文件
-## 如何使用生成的Profiles文件
 
 ## 参考
 
@@ -227,4 +117,8 @@ Using this information, we use a variety of optimization techniques, out of whic
 * [Android Debug Bridge - Read ART profiles for apps](https://developer.android.com/studio/command-line/adb#appprofiles)
 * [Deep dive into the ART runtime (Android Dev Summit '18)](https://www.youtube.com/watch?v=vU7Rhcl9x5o)
 * [Deep dive into ART(Android Runtime) for dynamic binary analysis | SungHyoun Song | Nullcon 2021](https://www.youtube.com/watch?v=mFq0vNvUgj8)
+* [Baseline Profiles](https://developer.android.com/topic/performance/baselineprofiles)
+* [Google I/O 2022: What’s new in Jetpack](https://android-developers.googleblog.com/2022/05/whats-new-in-jetpack.html)
+* [Improving App Performance with Baseline Profiles](https://android-developers.googleblog.com/2022/01/improving-app-performance-with-baseline.html)
+* [Android 强推的 Baseline Profiles 国内能用吗？我找 Google 工程师求证了！](https://juejin.cn/post/7104230480391864356)
 
