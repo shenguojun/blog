@@ -5,7 +5,7 @@ date: 2023-11-13T16:37:24+08:00
 
 > Tetris Native是有道词典端侧动态渲染引擎，目前已作为多个业务的运营投放容器，支持跨端UI动态化发布及多种样式，助力有道词典流量变现。《Tetris Native揭秘》系列文章将详细介绍Tetris Native的设计理念和详细落地方案。
 
-在介绍Tetris Native之前，先给Tetris打个广告。Tetris是H5低代码平台，一直以来都被有道词典广泛使用。该平台已经在我们的会员、课程、社区等业务投放页中得到应用，显著提升了运营和市场投放页面的开发迭代效率。如果您想了解更多关于Tetris的详细信息，请参阅[《Tetris - 有道低代码&可视化搭建H5平台》](https://kms.netease.com/article/61799)
+在介绍Tetris Native之前，先给Tetris打个广告。Tetris是H5低代码平台，一直以来都被有道词典广泛使用。该平台已经在我们的会员、课程、社区等业务投放页中得到应用，显著提升了运营和市场投放页面的开发迭代效率。
 
 ![WX20231031-100717 (1)](https://cdn.jsdelivr.net/gh/shenguojun/ImageServer@master/uPic/%202023_10_31_mJpsAM.png)
 
