@@ -2,7 +2,7 @@ baseURL = "https://shenguojun.github.io/"
 contentdir    = "content"
 layoutdir     = "layouts"
 publishdir    = "public"
-languageCode = "en-us"
+locale = "en-us"
 title = "Lawrence's Blog"
 theme = "beautifulhugo"
 pygmentsStyle = "trac"
@@ -47,6 +47,9 @@ googleAnalytics = "UA-162790364-1"
   linkedin = "guojunshen"
 
 [markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
   [markup.tableOfContents]
     endLevel = 3
     ordered = false
