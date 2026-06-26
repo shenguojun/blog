@@ -3,14 +3,14 @@ title: About me
 comments: false
 ---
 
-I'm Lawrence(申国骏), from south China and now a senior software engineer and tech lead in HSBC. 
+I'm Lawrence(申国骏), from south China and now a Senior Consultant Specialist in HSBC. 
 
 Experienced in Android, J2EE and Web development, have solid knowledge in Java / Kotin and JavaScript. Compatible team player through the whole project cycle as analysis, program design, testing and implementation.
 
 Looking forward to building amazing software that can make our daily life better!
 
 # WORK
-* HSBC (from 2025 till now) 
+* HSBC (Senior Consultant Specialist from 2025 till now) 
 * Netease Youdao (Senior Software Engineer from 2015 - 2025) 
 * Morgan Stanley (Summer Analyst Intern from 2014) 
 * SAP (Developer Intern from 2014) 
